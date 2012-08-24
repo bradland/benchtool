@@ -1,0 +1,74 @@
+#!/usr/bin/env ruby
+
+$:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
+require 'benchtool'
+require 'optparse'
+
+banner = %{Usage: benchtool [options] <command>
+
+INTRODUCTION
+
+    This tool expects a configuration file at config/configuration.yml. If not
+    found, one will be created for you. This tool also outputs Apache Bench data
+    to a gnuplot file in a directory named 'output'. If it is not present, it will
+    be created. Both of these can be overriden using options.
+
+COMMANDS
+    benchmark     Execute Apache Benchmark against a target. Builds and executes an 
+                  Apache Bench command, specifying cookies and headers from the 
+                  configuration file.
+    test          Test a target to determine if it is valid and responding. Builds
+                  and executes a Curl command, specifying cookies and headers from 
+                  the configuration file.
+
+OPTIONS
+}
+summary = []
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = banner
+
+  opts.on('-c', '--concurrency [INT]', Integer, "Apache Bench concurrency level (overrides config).") do |concurrency|
+    options[:ab_concurrency] = concurrency
+  end
+
+  opts.on('-d', '--dir-out', String, "Output directory for Apache Bench gnuplot files.") do |string|
+    options[:ab_output]
+  end
+
+  opts.on('-n', '--number [INT]', Integer, "Apache Bench number of requests (overrides config).") do |requests|
+    options[:ab_requests] = requests
+  end
+
+  opts.on('--no-plotfile', "Apache Bench will not write a gnuplot file.") do |boolean|
+    options[:no_plotfile] = boolean
+  end
+
+  opts.on('-p', '--print', "Print the command and exit; does not execute.") do |boolean|
+    options[:print_no_exec] = boolean
+  end
+
+  opts.on('-t', '--target [INT]', Integer, "Specify the index (1-based) of the target.") do |target_idx|
+    options[:target_idx] = target_idx
+  end
+
+  opts.summarize(summary)
+end.parse!
+
+command = ARGV[0]
+
+case command
+when nil
+  puts banner
+  puts summary
+  exit 1
+when "benchmark"
+  BenchTool::Benchmarker.new(options).benchmark
+  exit 0
+when "test"
+  BenchTool::Benchmarker.new(options).test
+  exit 0
+end
+
+# SshForever::SecureShellForever.new(login, options).run
