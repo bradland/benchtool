@@ -4,8 +4,8 @@ require File.expand_path('../lib/benchtool/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = ["Brad Landers"]
   gem.email         = ["brad@bradlanders.com"]
-  gem.description   = %q{A set of tools for benchmarking websites/services.}
-  gem.summary       = %q{A set of tools for benchmarking websites/services.}
+  gem.description   = %q{A simple wrapper tool for Apache Bench.}
+  gem.summary       = %q{A simple wrapper tool for Apache Bench.}
   gem.homepage      = ""
 
   gem.files         = `git ls-files`.split($\)
