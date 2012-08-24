@@ -1,8 +1,8 @@
 module BenchTool
-  class Benchmarker
+  class Dispatcher
 
     def initialize(options = {})
-      @appconfig = AppConfig.load
+      @appconfig = AppConfig.new.to_hash
       @config = @appconfig[:configuration]
       @targets = @appconfig[:targets]
       @options = options
@@ -12,18 +12,20 @@ module BenchTool
       end
     end
 
+    # Each command gets a method here
+
     def benchmark
       setup_output
       benchmark_target(select_target)
     end
 
     def test
-      target = select_target
-      test_target(target)
+      test_target(select_target)
     end
 
     private
 
+    # The methods below do the actual work. If this utility grows, these should be moved out to their own classes
     def benchmark_target(target)
       # Set up the params we'll send to the Apache Bench cmd builder
       ab_params = {
@@ -112,5 +114,5 @@ module BenchTool
       console "Using output dir: #{output_dir}"
     end
 
-  end # class Benchmarker
+  end # class Dispatcher
 end # module BenchTool
