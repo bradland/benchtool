@@ -1,49 +1,45 @@
 module BenchTool
   # A structureless datastore; loads and persists to a YML file in a configured location
-  module AppConfig
+  class AppConfig
 
     CONFIG_DIR = File.expand_path('./config')
     CONFIG_FILE = 'configuration.yml'
     CONFIG_PATH = File.join(CONFIG_DIR, CONFIG_FILE)
+    APP_CONFIG_DIR = File.expand_path(File.dirname(__FILE__))
 
-    @@options = {}
-    
-    # Load config
-    def self.load
-      @@options = fetch
+    def initialize
+      @options ||= fetch
     end
 
-    # Safe method to reload new settings
-    def self.reload
-      options = fetch rescue nil
-      @@options = options || {}
+    # Return config as hash
+    def to_hash
+      @options
     end
-    
-    # Get configuration option
-    def self.[](key)
-      @@options[key.to_s]
-    end
-    
-    # Get configuration option by attribute
-    def self.method_missing(method, *args)
-      @@options[method.to_s]
-    end
-    
-    # Returns true if configuration key exists
-    def self.exist?(key)
-      @@options.key?(key)
-    end
-    
-    protected
+
+    private
     
     # Get options from configuration file
-    def self.fetch
-      if File.exists?(File.join(CONFIG_DIR, CONFIG_FILE))
-        @@options = YAML::load(File.open(CONFIG_PATH))
-      else
-        @@options = {}
-      end
-      @@options.deep_symbolize
+    def fetch
+      setup unless config_exists?
+      console "Loading config from #{CONFIG_PATH}"
+      @options = YAML::load(File.open(CONFIG_PATH))
+      @options.deep_symbolize
+    end
+
+    def config_exists?
+      File.exists?(CONFIG_PATH)
+    end
+
+    def setup
+      FileUtils.mkdir_p(CONFIG_DIR)
+      FileUtils.cp(File.join(APP_CONFIG_DIR, 'configuration.yml.base'), CONFIG_PATH)
+      console "Default configuration was established in the cwd!"
+      console ""
+      console "NOTICE: The application will exit now. Edit the contents of the config file before proceeeding!"
+      console ""
+      console "Config file path:"
+      console "  #{CONFIG_PATH}"
+      exit 0
     end
 
   end # module AppConfig
