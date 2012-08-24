@@ -1,5 +1,4 @@
 module BenchTool
-  # A structureless datastore; loads and persists to a YML file in a configured location
   class AppConfig
 
     CONFIG_DIR = File.expand_path('./config')
