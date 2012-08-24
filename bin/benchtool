@@ -116,5 +116,3 @@ when "test"
   BenchTool::Dispatcher.new(options).test
   exit 0
 end
-
-# SshForever::SecureShellForever.new(login, options).run
