@@ -15,7 +15,6 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = BenchTool::VERSION
 
-  gem.add_dependency "thor"
   gem.add_dependency "highline"
   gem.add_dependency "open4"
 
