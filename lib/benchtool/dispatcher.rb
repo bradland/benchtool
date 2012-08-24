@@ -50,7 +50,7 @@ module BenchTool
       if @options[:print_no_exec]
         console "Print cmd requested; no exec:"
         console ""
-        console 
+        console cmd
       else
         console "Apache Bench output follows [#{Time.now.strftime('%F %T')}]================================"
         run_shell_cmd cmd
