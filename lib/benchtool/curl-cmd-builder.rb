@@ -19,6 +19,7 @@ module BenchTool
     def to_str
       cmd = ""
       cmd << @parts[:base]
+      cmd << @parts[:insecure]
       cmd << @parts[:cookies]      % @params[:cookies]
       unless @params[:headers].empty?
         @params[:headers].each do |header|
