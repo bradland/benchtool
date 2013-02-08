@@ -5,9 +5,11 @@ module BenchTool
       @params = params
       @options = options
       # Sample curl status cmd
-      # curl -IL --cookies '#{cookies}' --header '#{header}' "#{url}"
+      # Flag --insecure allows use of self-signed certs
+      # curl -siL --insecure --cookies '#{cookies}' --header '#{header}' "#{url}"
       @parts = {
         :base => "curl -siL ", 
+        :insecure => "--insecure ", 
         :cookies => "--cookie '%s' ", 
         :header => "--header '%s' ", 
         :url => "'%s'", 
